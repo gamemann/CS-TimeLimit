@@ -1,0 +1,17 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"	"{lightred}[TL]"
+	}
+	
+	"EndRoundCmd"
+	{
+		"en"	"{default}You have forced the round to end!"
+	}
+	
+	"NextMapMsg"
+	{
+		"en"	"{default}Time has ran out and the round has ended! Next map is {lightgreen}%s{default}!"
+	}
+}
