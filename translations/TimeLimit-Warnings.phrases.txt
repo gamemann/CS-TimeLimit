@@ -1,0 +1,32 @@
+"Phrases"
+{	
+	"OneMinuteRemaining"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"{default}There is {lightred}one minute {default}remaining for the game!"
+	}	
+	
+	"ThirtySecondsRemaining"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"{default}There are {lightred}thirty seconds {default}remaining for the game!"
+	}	
+	
+	"LastFewSeconds"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"{lightred}{1}{default}..."
+	}	
+	
+	"SecondsRemaining"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"{default}There are {lightred}{1} seconds {default}remaining for the game!"
+	}		
+	
+	"MinutesRemaining"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"{default}There are {lightred}{2} minutes {default}remaining for the game!"
+	}
+}
