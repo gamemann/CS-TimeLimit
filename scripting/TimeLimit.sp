@@ -76,13 +76,13 @@ public void OnMapTimeLeftChanged()
 {
 	/* Recreate the timer, etc. */
 	//PrintToServer("[TL] TimeLimitChange :: Resetting timer");
-	delete g_hCountDown;
+	
 	ResetTimeLeft();
 }
 
 public void OnMapStart()
 {
-	g_hCountDown = null;
+	delete g_hCountDown;
 	g_hWarningTimer = null;
 }
 
@@ -184,12 +184,13 @@ stock void ResetTimeLeft()
 	//PrintToServer("[TL] Starting reset timer with %f (%i)", float(iTimeLeft), iTimeLeft);
 	
 	/* Recreate the timer. */
-	g_hCountDown = CreateTimer(float(iTimeLeft), Timer_CountDown, _, TIMER_FLAG_NO_MAPCHANGE);
+	g_hCountDown = CreateTimer(float(iTimeLeft), Timer_CountDown, _);
 }
 
 public Action Timer_CountDown(Handle hTimer)
 {
-	PrintToServer("[TL] Ending theeeeeeeee gameeeeeeeee");
+	delete g_hCountDown;
+	//PrintToServer("[TL] Ending theeeeeeeee gameeeeeeeee");
 	EndGame();
 }
 
