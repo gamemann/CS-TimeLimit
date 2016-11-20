@@ -4,7 +4,7 @@
 #include <multicolors>
 #include <nextmap>
 
-#define PL_VERSION "1.0.0"
+#define PL_VERSION "1.0.1"
 
 public Plugin myinfo = 
 {
@@ -74,9 +74,9 @@ public void ConVarChanged(Handle hCvar, const char[] oldV, const char[] newV)
 
 public void OnMapTimeLeftChanged()
 {
-	delete g_hCountDown;
 	/* Recreate the timer, etc. */
 	//PrintToServer("[TL] TimeLimitChange :: Resetting timer");
+	delete g_hCountDown;
 	ResetTimeLeft();
 }
 
@@ -84,6 +84,12 @@ public void OnMapStart()
 {
 	g_hCountDown = null;
 	g_hWarningTimer = null;
+}
+
+public void OnMapEnd()
+{
+	//delete g_hCountDown;
+	//delete g_hWarningTimer;
 }
 
 public void OnConfigsExecuted()
@@ -106,7 +112,6 @@ public void OnConfigsExecuted()
 		}
 		
 		/* Start the timer if it isn't started already. */
-		g_hWarningTimer = null;
 		g_hWarningTimer = CreateTimer(1.0, Timer_Warning, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
@@ -147,7 +152,7 @@ stock void EndGame()
 	}
 	
 	// Now terminate the round!
-	CS_TerminateRound((g_cvRestartDelay != null) ? g_cvRestartDelay.FloatValue : 1.0, CSRoundEnd_Draw, true);
+	CS_TerminateRound((g_cvRestartDelay != null && g_cvRestartDelay.FloatValue > 0) ? g_cvRestartDelay.FloatValue : 1.0, CSRoundEnd_Draw, false);
 	
 	// Now print a message!
 	char sNextMap[MAX_NAME_LENGTH];
@@ -184,7 +189,7 @@ stock void ResetTimeLeft()
 
 public Action Timer_CountDown(Handle hTimer)
 {
-	//PrintToServer("[TL] Ending theeeeeeeee gameeeeeeeee");
+	PrintToServer("[TL] Ending theeeeeeeee gameeeeeeeee");
 	EndGame();
 }
 
