@@ -50,12 +50,6 @@ public void OnPluginStart()
 	g_cvRestartDelay = FindConVar("mp_round_restart_delay");
 	g_cvTimeLimit = FindConVar("mp_timelimit");
 	
-	// Make sure the game is CS:GO or CS:S.
-	if(GetEngineVersion() != Engine_CSGO && GetEngineVersion() != Engine_CSS) 
-	{
-		SetFailState("This plugin only supports CS:GO and CS:S.");
-	}
-	
 	// Translations.
 	LoadTranslations("TimeLimit.phrases.txt");
 	LoadTranslations("TimeLimit-Warnings.phrases.txt");
@@ -126,6 +120,7 @@ public void OnConfigsExecuted()
 
 public Action Command_EndRound(int iClient, int iArgs) 
 {
+	g_hCountDown = null;
 	EndGame();
 	CReplyToCommand(iClient, "%t%t", "Tag", "EndRoundCmd")
 	
@@ -189,7 +184,7 @@ stock void ResetTimeLeft()
 
 public Action Timer_CountDown(Handle hTimer)
 {
-	PrintToServer("[TL] Ending theeeeeeeee gameeeeeeeee");
+	//PrintToServer("[TL] Ending theeeeeeeee gameeeeeeeee");
 	EndGame();
 }
 
