@@ -76,16 +76,21 @@ public void OnMapTimeLeftChanged()
 {
 	/* Recreate the timer, etc. */
 	//PrintToServer("[TL] TimeLimitChange :: Resetting timer");
-	delete g_hCountDown;
+	
 	ResetTimeLeft();
 }
 
 public void OnMapStart()
 {
 	delete g_hCountDown;
-	delete g_hWarningTimer;
+	g_hWarningTimer = null;
 }
 
+public void OnMapEnd()
+{
+	//delete g_hCountDown;
+	//delete g_hWarningTimer;
+}
 
 public void OnConfigsExecuted()
 {
@@ -107,7 +112,7 @@ public void OnConfigsExecuted()
 		}
 		
 		/* Start the timer if it isn't started already. */
-		g_hWarningTimer = CreateTimer(1.0, Timer_Warning, _, TIMER_REPEAT);
+		g_hWarningTimer = CreateTimer(1.0, Timer_Warning, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
