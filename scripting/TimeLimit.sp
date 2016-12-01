@@ -120,7 +120,6 @@ public void OnConfigsExecuted()
 
 public Action Command_EndRound(int iClient, int iArgs) 
 {
-	g_hCountDown = null;
 	EndGame();
 	CReplyToCommand(iClient, "%t%t", "Tag", "EndRoundCmd")
 	
@@ -185,6 +184,7 @@ stock void ResetTimeLeft()
 public Action Timer_CountDown(Handle hTimer)
 {
 	//PrintToServer("[TL] Ending theeeeeeeee gameeeeeeeee");
+	g_hCountDown = null;
 	EndGame();
 }
 
