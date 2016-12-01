@@ -173,6 +173,9 @@ stock void ResetTimeLeft()
 		return;
 	}
 	
+	/* Kill the previous timer. */
+	g_hCountDown = null;
+	
 	//PrintToServer("[TL] Starting reset timer with %f (%i)", float(iTimeLeft), iTimeLeft);
 	
 	/* Recreate the timer. */
@@ -181,6 +184,7 @@ stock void ResetTimeLeft()
 
 public Action Timer_CountDown(Handle hTimer)
 {
+	delete g_hCountDown;
 	//PrintToServer("[TL] Ending theeeeeeeee gameeeeeeeee");
 	EndGame();
 }
@@ -191,7 +195,7 @@ public Action Timer_Warning(Handle hTimer)
 	int iTimeLeft;
 	GetMapTimeLeft(iTimeLeft);
 	
-	PrintToServer("[%t] Timer_Warning :: %i left", "Tag", iTimeLeft);
+	//PrintToServer("[%t] Timer_Warning :: %i left", "Tag", iTimeLeft);
 	
 	/* Check if the Key Values handle is valid and if there is enough time left. */
 	if (g_kvWarnings != null && iTimeLeft > 0)
