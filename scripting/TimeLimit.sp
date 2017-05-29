@@ -19,6 +19,7 @@ public Plugin myinfo =
 ConVar g_cvEnabled = null;
 ConVar g_cvWarnings = null;
 ConVar g_cvConfig = null;
+ConVar g_cvTimeLimitSet = null;
 
 ConVar g_cvIgnoreCond = null;
 ConVar g_cvRestartDelay = null;
@@ -28,6 +29,7 @@ ConVar g_cvTimeLimit = null;
 bool g_bEnabled;
 bool g_bWarnings;
 char g_sConfig[PLATFORM_MAX_PATH];
+int g_iTimeLimitSet;
 
 // Other Variables.
 Handle g_hCountDown;
@@ -45,6 +47,9 @@ public void OnPluginStart()
 	
 	g_cvConfig = CreateConVar("sm_tl_config", "configs/TimeLimit-Warnings.cfg", "Path to the Warnings configuration file.");
 	HookConVarChange(g_cvConfig, ConVarChanged);
+	
+	g_cvTimeLimitSet = CreateConVar("sm_tl_timelimit_set", "0", "Set the 'mp_timelimit' ConVar to this when the round ends.");
+	HookConVarChange(g_cvTimeLimitSet, ConVarChanged);
 	
 	g_cvIgnoreCond = FindConVar("mp_ignore_round_win_conditions");
 	g_cvRestartDelay = FindConVar("mp_round_restart_delay");
@@ -91,6 +96,7 @@ public void OnConfigsExecuted()
 	g_bEnabled = GetConVarBool(g_cvEnabled);
 	g_bWarnings = GetConVarBool(g_cvWarnings);
 	GetConVarString(g_cvConfig, g_sConfig, sizeof(g_sConfig));
+	g_iTimeLimitSet = GetConVarInt(g_cvTimeLimitSet);
 	
 	/* Start/Stop warnings timer. */
 	if (g_bWarnings)
@@ -142,7 +148,7 @@ stock void EndGame()
 	// Set "mp_timelimit" to 0.
 	if (g_cvTimeLimit != null)
 	{
-		SetConVarInt(g_cvTimeLimit, 0, false, false);
+		SetConVarInt(g_cvTimeLimit, g_iTimeLimitSet, false, false);
 	}
 	
 	// Now terminate the round!
