@@ -1,10 +1,12 @@
 #include <sourcemod>
 #include <sdktools>
-#include <cstrike>
 #include <multicolors>
 #include <nextmap>
+#undef REQUIRE_EXTENSIONS
+#include <cstrike>
+#define REQUIRE_EXTENSIONS
 
-#define PL_VERSION "1.0.1"
+#define PL_VERSION "1.0.2"
 
 public Plugin myinfo = 
 {
@@ -20,6 +22,7 @@ ConVar g_cvEnabled = null;
 ConVar g_cvWarnings = null;
 ConVar g_cvConfig = null;
 ConVar g_cvTimeLimitSet = null;
+ConVar g_cvChangeType = null;
 
 ConVar g_cvIgnoreCond = null;
 ConVar g_cvRestartDelay = null;
@@ -30,6 +33,7 @@ bool g_bEnabled;
 bool g_bWarnings;
 char g_sConfig[PLATFORM_MAX_PATH];
 int g_iTimeLimitSet;
+int g_iChangeType;
 
 // Other Variables.
 Handle g_hCountDown;
@@ -49,7 +53,10 @@ public void OnPluginStart()
 	HookConVarChange(g_cvConfig, ConVarChanged);
 	
 	g_cvTimeLimitSet = CreateConVar("sm_tl_timelimit_set", "0", "Set the 'mp_timelimit' ConVar to this when the round ends.");
-	HookConVarChange(g_cvTimeLimitSet, ConVarChanged);
+	HookConVarChange(g_cvTimeLimitSet, ConVarChanged);	
+	
+	g_cvChangeType = CreateConVar("sm_tl_change_type", "0", "0 = Use 'CS_TerminateRound' to end the map (requires cstrike). 1 = Uses 'ForceChangeLevel' within 'nextmap'.");
+	HookConVarChange(g_cvChangeType, ConVarChanged);
 	
 	g_cvIgnoreCond = FindConVar("mp_ignore_round_win_conditions");
 	g_cvRestartDelay = FindConVar("mp_round_restart_delay");
@@ -97,6 +104,7 @@ public void OnConfigsExecuted()
 	g_bWarnings = GetConVarBool(g_cvWarnings);
 	GetConVarString(g_cvConfig, g_sConfig, sizeof(g_sConfig));
 	g_iTimeLimitSet = GetConVarInt(g_cvTimeLimitSet);
+	g_iChangeType = GetConVarInt(g_cvChangeType);
 	
 	/* Start/Stop warnings timer. */
 	if (g_bWarnings)
@@ -139,6 +147,10 @@ stock void EndGame()
 		return;
 	}
 	
+	// Get the next map.
+	char sNextMap[MAX_NAME_LENGTH];
+	GetNextMap(sNextMap, sizeof(sNextMap));
+	
 	// Set "mp_ignore_round_win_conditions" to 0.
 	if (g_cvIgnoreCond != null)
 	{
@@ -152,11 +164,14 @@ stock void EndGame()
 	}
 	
 	// Now terminate the round!
-	CS_TerminateRound((g_cvRestartDelay != null && g_cvRestartDelay.FloatValue > 0) ? g_cvRestartDelay.FloatValue : 1.0, CSRoundEnd_Draw, false);
-	
-	// Now print a message!
-	char sNextMap[MAX_NAME_LENGTH];
-	GetNextMap(sNextMap, sizeof(sNextMap));
+	if (g_iChangeType == 0)
+	{
+		CS_TerminateRound((g_cvRestartDelay != null && g_cvRestartDelay.FloatValue > 0) ? g_cvRestartDelay.FloatValue : 1.0, CSRoundEnd_Draw, false);
+	}
+	else
+	{
+		ForceChangeLevel(sNextMap, "Time limit is up");
+	}
 	
 	CPrintToChatAll("%t%t", "Tag", "NextMapMsg", sNextMap);
 }
