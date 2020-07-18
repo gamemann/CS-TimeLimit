@@ -91,12 +91,6 @@ public void OnMapTimeLeftChanged()
 	ResetTimeLeft();
 }
 
-public void OnMapStart()
-{
-	g_hCountDown = null;
-	g_hWarningTimer = null;
-}
-
 public void OnConfigsExecuted()
 {
 	g_bEnabled = GetConVarBool(g_cvEnabled);
