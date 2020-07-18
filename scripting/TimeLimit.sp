@@ -22,17 +22,20 @@ ConVar g_cvEnabled = null;
 ConVar g_cvWarnings = null;
 ConVar g_cvConfig = null;
 ConVar g_cvTimeLimitSet = null;
+ConVar g_cvMaxRoundsSet = null;
 ConVar g_cvChangeType = null;
 
 ConVar g_cvIgnoreCond = null;
 ConVar g_cvRestartDelay = null;
 ConVar g_cvTimeLimit = null;
+ConVar g_cvMaxRounds = null;
 
 /* ConVar values */
 bool g_bEnabled;
 bool g_bWarnings;
 char g_sConfig[PLATFORM_MAX_PATH];
 int g_iTimeLimitSet;
+int g_iMaxRoundsSet;
 int g_iChangeType;
 
 /* Other Variables. */
@@ -54,6 +57,9 @@ public void OnPluginStart()
 	
 	g_cvTimeLimitSet = CreateConVar("sm_tl_timelimit_set", "0", "Set the 'mp_timelimit' ConVar to this when the round ends.");
 	HookConVarChange(g_cvTimeLimitSet, ConVarChanged);	
+
+	g_cvMaxRoundsSet = CreateConVar("sm_tl_maxrounds_set", "0", "Set the 'mp_maxrounds' ConVar to this when the round ends.");
+	HookConVarChange(g_cvMaxRoundsSet, ConVarChanged);	
 	
 	g_cvChangeType = CreateConVar("sm_tl_change_type", "0", "0 = Use 'CS_TerminateRound' to end the map (requires cstrike). 1 = Uses 'ForceChangeLevel' within 'nextmap'.");
 	HookConVarChange(g_cvChangeType, ConVarChanged);
@@ -61,6 +67,7 @@ public void OnPluginStart()
 	g_cvIgnoreCond = FindConVar("mp_ignore_round_win_conditions");
 	g_cvRestartDelay = FindConVar("mp_round_restart_delay");
 	g_cvTimeLimit = FindConVar("mp_timelimit");
+	g_cvMaxRounds = FindConVar("mp_maxrounds");
 	
 	// Translations.
 	LoadTranslations("TimeLimit.phrases.txt");
@@ -93,6 +100,7 @@ public void OnConfigsExecuted()
 	g_bWarnings = GetConVarBool(g_cvWarnings);
 	GetConVarString(g_cvConfig, g_sConfig, sizeof(g_sConfig));
 	g_iTimeLimitSet = GetConVarInt(g_cvTimeLimitSet);
+	g_iMaxRoundsSet = GetConVarInt(g_cvMaxRoundsSet);
 	g_iChangeType = GetConVarInt(g_cvChangeType);
 	
 	// Start/Stop warnings timer.
@@ -146,10 +154,16 @@ stock void EndGame()
 		SetConVarInt(g_cvIgnoreCond, 0, false, false);
 	}
 	
-	// Set "mp_timelimit" to 0.
+	// Set "mp_timelimit" to CVar value.
 	if (g_cvTimeLimit != null)
 	{
 		SetConVarInt(g_cvTimeLimit, g_iTimeLimitSet, false, false);
+	}
+
+	// Set "mp_maxrounds" to CVar value.
+	if (g_cvMaxRounds != null)
+	{
+		SetConVarInt(g_cvMaxRounds, g_iMaxRoundsSet, false, false);
 	}
 	
 	// Now terminate the round!
