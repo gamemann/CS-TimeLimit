@@ -198,9 +198,6 @@ stock void ResetTimeLeft()
 		return;
 	}
 	
-	/* Kill the previous timer. */
-	g_hCountDown = null;
-	
 	//PrintToServer("[TL] Starting reset timer with %f (%i)", float(iTimeLeft), iTimeLeft);
 	
 	/* Recreate the timer. */
