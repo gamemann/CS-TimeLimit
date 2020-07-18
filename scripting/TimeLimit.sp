@@ -83,10 +83,7 @@ public void OnMapTimeLeftChanged()
 	/* Recreate the timer, etc. */
 	//PrintToServer("[TL] TimeLimitChange :: Resetting timer");
 
-	if (IsValidHandle(g_hCountDown))
-	{
-		delete g_hCountDown;
-	}
+	delete g_hCountDown;
 
 	ResetTimeLeft();
 }
@@ -118,16 +115,10 @@ public void OnConfigsExecuted()
 	else
 	{
 		/* Stop the timer. */
-		if (IsValidHandle(g_hWarningTimer))
-		{
-			delete g_hWarningTimer;
-		}
+		delete g_hWarningTimer;
 		
 		/* Close key values. */
-		if (IsValidHandle(g_hWarningTimer))
-		{
-			delete g_kvWarnings;
-		}
+		delete g_kvWarnings;
 	}
 }
 
