@@ -17,7 +17,7 @@ public Plugin myinfo =
 	url = "GFLClan.com"
 };
 
-// ConVars
+/* ConVars */
 ConVar g_cvEnabled = null;
 ConVar g_cvWarnings = null;
 ConVar g_cvConfig = null;
@@ -28,14 +28,14 @@ ConVar g_cvIgnoreCond = null;
 ConVar g_cvRestartDelay = null;
 ConVar g_cvTimeLimit = null;
 
-// ConVar values
+/* ConVar values */
 bool g_bEnabled;
 bool g_bWarnings;
 char g_sConfig[PLATFORM_MAX_PATH];
 int g_iTimeLimitSet;
 int g_iChangeType;
 
-// Other Variables.
+/* Other Variables. */
 Handle g_hCountDown = null;
 Handle g_hWarningTimer = null;
 KeyValues g_kvWarnings = null;
@@ -80,8 +80,7 @@ public void ConVarChanged(Handle hCvar, const char[] oldV, const char[] newV)
 
 public void OnMapTimeLeftChanged()
 {
-	/* Recreate the timer, etc. */
-	//PrintToServer("[TL] TimeLimitChange :: Resetting timer");
+	// Recreate the timer, etc.
 
 	delete g_hCountDown;
 
@@ -96,10 +95,10 @@ public void OnConfigsExecuted()
 	g_iTimeLimitSet = GetConVarInt(g_cvTimeLimitSet);
 	g_iChangeType = GetConVarInt(g_cvChangeType);
 	
-	/* Start/Stop warnings timer. */
+	// Start/Stop warnings timer.
 	if (g_bWarnings)
 	{
-		/* Configure warnings. */
+		// Configure warnings.
 		if (g_kvWarnings == null)
 		{
 			char sFile[PLATFORM_MAX_PATH];
@@ -109,15 +108,15 @@ public void OnConfigsExecuted()
 			FileToKeyValues(g_kvWarnings, sFile);
 		}
 		
-		/* Start the timer if it isn't started already. */
+		// Start the timer if it isn't started already.
 		g_hWarningTimer = CreateTimer(1.0, Timer_Warning, _, TIMER_REPEAT);
 	}
 	else
 	{
-		/* Stop the timer. */
+		// Stop the timer.
 		delete g_hWarningTimer;
 		
-		/* Close key values. */
+		// Close key values.
 		delete g_kvWarnings;
 	}
 }
@@ -173,69 +172,63 @@ stock void ResetTimeLeft()
 		return;
 	}
 	
-	/* Get new time left. */
+	// Get new time left.
 	int iTimeLeft;
 	GetMapTimeLeft(iTimeLeft);
 	
-	/* Check the value. */
+	// Check the value.
 	if (iTimeLeft < 1)
 	{
 		return;
 	}
 	
-	//PrintToServer("[TL] Starting reset timer with %f (%i)", float(iTimeLeft), iTimeLeft);
-	
-	/* Recreate the timer. */
+	// Recreate the timer.
 	g_hCountDown = CreateTimer(float(iTimeLeft), Timer_CountDown, _);
 }
 
 public Action Timer_CountDown(Handle hTimer)
 {
-	/* Check timer handle to ensure it matches global handle. */
+	// Check timer handle to ensure it matches global handle.
 	if (hTimer != g_hCountDown)
 	{
 		return Plugin_Stop;
 	}
 
-	//PrintToServer("[TL] Ending theeeeeeeee gameeeeeeeee");
 	g_hCountDown = null;
 	EndGame();
 }
 
 public Action Timer_Warning(Handle hTimer)
 {
-	/* Check timer handle to ensure it matches global handle. */
+	// Check timer handle to ensure it matches global handle.
 	if (hTimer != g_hCountDown)
 	{
 		return Plugin_Stop;
 	}
 
-	/* First, get the time left. */
+	// First, get the time left.
 	int iTimeLeft;
 	GetMapTimeLeft(iTimeLeft);
 	
-	//PrintToServer("[%t] Timer_Warning :: %i left", "Tag", iTimeLeft);
 	
-	/* Check if the Key Values handle is valid and if there is enough time left. */
+	// Check if the Key Values handle is valid and if there is enough time left.
 	if (g_kvWarnings != null && iTimeLeft > 0)
 	{
-		//PrintToServer("[%t]Timer_Warning :: It's time to start!", "Tag");
 		char sTimeLeft[11];
+
 		IntToString(iTimeLeft, sTimeLeft, sizeof(sTimeLeft));
 		
-		/* Now, search for x in the key values. */
+		// Now, search for x in the key values.
 		if (KvJumpToKey(g_kvWarnings, sTimeLeft, false))
-		{
-			//PrintToServer("[%t]Timer_Warning :: TIME FOUND! %s", "Tag", sTimeLeft);
-			
-			/* Get the translation name to use. */
+		{	
+			// Get the translation name to use.
 			char sTranslation[MAX_NAME_LENGTH];
 			KvGetString(g_kvWarnings, "translation", sTranslation, sizeof(sTranslation), "SecondsRemaining");
 			
-			/* Now, rewind the KV. */
+			// Now, rewind the KV.
 			KvRewind(g_kvWarnings);
 			
-			/* Now, print it to the entire server. */
+			// Now, print it to the entire server.
 			CPrintToChatAll("%t%t", "Tag", sTranslation, iTimeLeft, (iTimeLeft / 60));
 		}
 	}
