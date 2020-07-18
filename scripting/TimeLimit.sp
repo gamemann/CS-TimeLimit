@@ -110,7 +110,7 @@ public void OnConfigsExecuted()
 		}
 		
 		/* Start the timer if it isn't started already. */
-		g_hWarningTimer = CreateTimer(1.0, Timer_Warning, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+		g_hWarningTimer = CreateTimer(1.0, Timer_Warning, _, TIMER_REPEAT);
 	}
 	else
 	{
@@ -186,7 +186,7 @@ stock void ResetTimeLeft()
 	//PrintToServer("[TL] Starting reset timer with %f (%i)", float(iTimeLeft), iTimeLeft);
 	
 	/* Recreate the timer. */
-	g_hCountDown = CreateTimer(float(iTimeLeft), Timer_CountDown, _, TIMER_FLAG_NO_MAPCHANGE);
+	g_hCountDown = CreateTimer(float(iTimeLeft), Timer_CountDown, _);
 }
 
 public Action Timer_CountDown(Handle hTimer)
