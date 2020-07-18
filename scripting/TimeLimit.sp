@@ -36,9 +36,9 @@ int g_iTimeLimitSet;
 int g_iChangeType;
 
 // Other Variables.
-Handle g_hCountDown;
-Handle g_hWarningTimer;
-KeyValues g_kvWarnings;
+Handle g_hCountDown = null;
+Handle g_hWarningTimer = null;
+KeyValues g_kvWarnings = null;
 
 public void OnPluginStart() 
 {
