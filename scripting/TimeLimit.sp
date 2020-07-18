@@ -191,6 +191,12 @@ stock void ResetTimeLeft()
 
 public Action Timer_CountDown(Handle hTimer)
 {
+	/* Check timer handle to ensure it matches global handle. */
+	if (hTimer != g_hCountDown)
+	{
+		return Plugin_Stop;
+	}
+
 	//PrintToServer("[TL] Ending theeeeeeeee gameeeeeeeee");
 	g_hCountDown = null;
 	EndGame();
@@ -198,6 +204,12 @@ public Action Timer_CountDown(Handle hTimer)
 
 public Action Timer_Warning(Handle hTimer)
 {
+	/* Check timer handle to ensure it matches global handle. */
+	if (hTimer != g_hCountDown)
+	{
+		return Plugin_Stop;
+	}
+
 	/* First, get the time left. */
 	int iTimeLeft;
 	GetMapTimeLeft(iTimeLeft);
