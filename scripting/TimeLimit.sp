@@ -203,7 +203,7 @@ public Action Timer_CountDown(Handle hTimer)
 public Action Timer_Warning(Handle hTimer)
 {
 	// Check timer handle to ensure it matches global handle.
-	if (hTimer != g_hCountDown)
+	if (hTimer != g_hWarningTimer)
 	{
 		return Plugin_Stop;
 	}
