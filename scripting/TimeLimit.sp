@@ -87,7 +87,7 @@ public void OnMapTimeLeftChanged()
 	{
 		delete g_hCountDown;
 	}
-	
+
 	ResetTimeLeft();
 }
 
@@ -95,12 +95,6 @@ public void OnMapStart()
 {
 	g_hCountDown = null;
 	g_hWarningTimer = null;
-}
-
-public void OnMapEnd()
-{
-	//delete g_hCountDown;
-	//delete g_hWarningTimer;
 }
 
 public void OnConfigsExecuted()
