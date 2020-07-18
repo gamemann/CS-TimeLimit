@@ -83,10 +83,7 @@ public void OnMapTimeLeftChanged()
 	/* Recreate the timer, etc. */
 	//PrintToServer("[TL] TimeLimitChange :: Resetting timer");
 
-	if (g_hCountDown != null)
-	{
-		delete g_hCountDown;
-	}
+	delete g_hCountDown;
 
 	ResetTimeLeft();
 }
