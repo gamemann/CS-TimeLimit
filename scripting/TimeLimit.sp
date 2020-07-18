@@ -196,6 +196,8 @@ public Action Timer_CountDown(Handle hTimer)
 
 	g_hCountDown = null;
 	EndGame();
+
+	return Plugin_Continue;
 }
 
 public Action Timer_Warning(Handle hTimer)
@@ -232,4 +234,6 @@ public Action Timer_Warning(Handle hTimer)
 			CPrintToChatAll("%t%t", "Tag", sTranslation, iTimeLeft, (iTimeLeft / 60));
 		}
 	}
+
+	return Plugin_Continue;
 }
